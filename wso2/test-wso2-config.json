@@ -1,0 +1,25 @@
+{
+    "name": "GU-TEST",
+    "version": "1.0",
+    "context": "api/test/api/666",
+    "endpoint": "http://efp-gia-record-091701-adapter-efp.apps.okd4.sm-soft.ru/api/gia/record/091701",
+    "url": "http://efp-gia-record-091701-adapter-efp.apps.okd4.sm-soft.ru/api-doc?group=GU-GIA-RECORD-091701",
+    "tiers": [
+        "Unlimited",
+        "Gold"
+    ],
+    "subscribers": [
+        {
+            "username": "admin",
+            "password": "admin",
+            "application": "DefaultApplication",
+            "tier": "Unlimited"
+        },
+        {
+            "username": "test_tools",
+            "password": "test_tools",
+            "application": "DefaultApplication",
+            "tier": "Unlimited"
+        }
+    ]
+}
