@@ -30,4 +30,4 @@ Replace `Definitions/swagger.yaml` **with your swagger file** (JSON also support
 Import the API project using the command,
 `apictl import api -f [directory path] -e [env name]`
 
-1
+2
