@@ -5,7 +5,7 @@ data:
   context: api/test/api/666
   version: 1.0
   provider: admin
-  lifeCycleStatus: CREATED
+  lifeCycleStatus: PUBLISHED
   isRevision: false
   revisionId: 0
   type: HTTP

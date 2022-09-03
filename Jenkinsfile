@@ -30,5 +30,11 @@ pipeline {
             }
         }
 
+
+    }
+    post {
+        bat '''
+                    apictl logout
+                '''
     }
 }
