@@ -1,0 +1,840 @@
+---
+swagger: '2.0'
+info:
+  description: Запись на участие в итоговом сочинении (изложении) по завершении установленных
+    сроков подачи заявлений
+  version: '1.0'
+  title: GU-GIA-RECORD-091701
+host: efp-gia-record-091701-adapter-efp.apps.okd4.sm-soft.ru
+basePath: "/api/gia/record/091701"
+tags:
+  - name: Заявки
+    description: Работа с заявками
+  - name: Статусы
+    description: Работа со статусами
+paths:
+  "/application":
+    post:
+      tags:
+        - Заявки
+      summary: Подача неподписанной заявки
+      operationId: postApplicationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: AccessToken
+          in: header
+          description: Токен доступа пользователя
+          required: false
+          type: string
+          x-example: NINxnizbgYYQg94vEd6MjkTPxR3r2SZ3GO0HY0yEKLRXIDKsQ_0fZ-s9IAHBO92AszgTIqItY
+        - name: CallbackUrl
+          in: header
+          description: Адрес для ответа
+          required: false
+          type: string
+          x-example: http://mos.ru/callbackUrl
+        - name: CorpId
+          in: header
+          description: Идентификатор юр. лица
+          required: false
+          type: string
+          x-example: 3b4fda50-e7e2-4644-8f44-69a133d1d91a
+        - name: ExpiredTime
+          in: header
+          description: 'Время жизни сообщения. ISO дата. Формат: YYYY-MM-DDThh:mm:ss[.sss]'
+          required: false
+          type: string
+          x-example: '2018-05-07T17:42:46.147Z'
+        - name: RequestId
+          in: header
+          description: Идентификатор запроса
+          required: false
+          type: string
+          x-example: 735e31e0-7392-4742-9ed5-60042746786a
+        - name: iv-user
+          in: header
+          description: Идентификатор пользователя
+          required: false
+          type: string
+          x-example: f1a7a95a-f6bf-4e5d-b9b6-49b639319a9d
+        - in: body
+          name: request body
+          description: Тело запроса
+          required: false
+          schema:
+            "$ref": "#/definitions/Application"
+      responses:
+        '200':
+          description: Заявление успешно подано
+          schema:
+            "$ref": "#/definitions/ApplicationInfoResponse"
+        '208':
+          description: Заявление уже подавалось
+          schema:
+            "$ref": "#/definitions/ApplicationInfoAlreadyResponse"
+        '400':
+          description: Неверный формат запроса
+          schema:
+            "$ref": "#/definitions/ErrorValidationResponse"
+        '403':
+          description: Доступ запрещен
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '500':
+          description: Внутренняя ошибка сервиса
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+      deprecated: false
+  "/status":
+    post:
+      tags:
+        - Статусы
+      summary: Подача неподписанного статуса
+      operationId: postStatusUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: AccessToken
+          in: header
+          description: Токен доступа пользователя
+          required: false
+          type: string
+          x-example: NINxnizbgYYQg94vEd6MjkTPxR3r2SZ3GO0HY0yEKLRXIDKsQ_0fZ-s9IAHBO92AszgTIqItY
+        - name: CallbackUrl
+          in: header
+          description: Адрес для ответа
+          required: false
+          type: string
+          x-example: http://mos.ru/callbackUrl
+        - name: CorpId
+          in: header
+          description: Идентификатор юр. лица
+          required: false
+          type: string
+          x-example: 3b4fda50-e7e2-4644-8f44-69a133d1d91a
+        - name: ExpiredTime
+          in: header
+          description: 'Время жизни сообщения. ISO дата. Формат: YYYY-MM-DDThh:mm:ss[.sss]'
+          required: false
+          type: string
+          x-example: '2018-05-07T17:42:46.147Z'
+        - name: RequestId
+          in: header
+          description: Идентификатор запроса
+          required: false
+          type: string
+          x-example: 735e31e0-7392-4742-9ed5-60042746786a
+        - name: iv-user
+          in: header
+          description: Идентификатор пользователя
+          required: false
+          type: string
+          x-example: f1a7a95a-f6bf-4e5d-b9b6-49b639319a9d
+        - in: body
+          name: request body
+          description: Тело запроса
+          required: false
+          schema:
+            "$ref": "#/definitions/Status"
+      responses:
+        '200':
+          description: Заявление на доп. действие успешно подано
+          schema:
+            "$ref": "#/definitions/StatusResponse"
+        '208':
+          description: Заявление на доп. действие уже подавалось
+          schema:
+            "$ref": "#/definitions/StatusAlreadyResponse"
+        '400':
+          description: Неверный формат запроса
+          schema:
+            "$ref": "#/definitions/ErrorValidationResponse"
+        '500':
+          description: Внутренняя ошибка сервиса
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+      deprecated: false
+definitions:
+  Application:
+    type: object
+    required:
+      - Contacts
+      - Properties
+    properties:
+      Service:
+        description: Общие данные по обращению
+        "$ref": "#/definitions/RequestService"
+      Contacts:
+        description: Физ.лица или юр.лица данного обращения
+        "$ref": "#/definitions/ArrayOfBaseDeclarant"
+      Documents:
+        type: array
+        description: Документы заявления
+        items:
+          "$ref": "#/definitions/ServiceDocument"
+      Properties:
+        description: Дополнительные атрибуты обращения
+        "$ref": "#/definitions/ServiceProperties"
+    title: Application
+    description: Обращение
+  ApplicationInfoAlreadyResponse:
+    type: object
+    required:
+      - Status
+    properties:
+      ApplicationInfos:
+        type: array
+        description: Список ЕНО
+        items:
+          "$ref": "#/definitions/ServiceNumberResponse"
+      Status:
+        type: string
+        example: ALREADY_REPORTED
+        description: HTTP статус сообщения
+    title: ApplicationInfoAlreadyResponse
+    description: Сообщение об успешном создании заявления
+  ApplicationInfoResponse:
+    type: object
+    required:
+      - Status
+    properties:
+      ApplicationInfos:
+        type: array
+        description: Список ЕНО
+        items:
+          "$ref": "#/definitions/ServiceNumberResponse"
+      Status:
+        type: string
+        example: OK
+        description: HTTP статус сообщения
+    title: ApplicationInfoResponse
+    description: Сообщение об успешном создании заявления
+  ApplicationServiceNumbersRequest:
+    type: object
+    required:
+      - ServiceNumber
+    properties:
+      ServiceNumber:
+        type: array
+        example:
+          - 0001-9300120-067601-00000036/20
+        description: Список ЕНО
+        items:
+          type: string
+    title: ApplicationServiceNumbersRequest
+    description: Данные для отправки подписанного заявления
+  ArrayOfBaseDeclarant:
+    type: object
+    properties:
+      PrivatePerson:
+        type: array
+        description: Контакты ФЛ
+        items:
+          "$ref": "#/definitions/RequestContact"
+    title: ArrayOfBaseDeclarant
+  CoordinateFileReference:
+    type: object
+    required:
+      - FileIdInStore
+      - FileName
+    properties:
+      FileIdInStore:
+        type: string
+        example: B77322C0-F32F-4BEF-B345-BB9D0754D5EF
+        description: Идентификатор файла в хранилище
+      FileName:
+        type: string
+        example: document.pdf
+        description: Имя файла
+    title: CoordinateFileReference
+    description: Ссылка на файл
+  EduOrg:
+    type: object
+    required:
+      - Class
+      - EduCode
+      - EduForm
+      - EduFormCode
+    properties:
+      EduOrgMoscow:
+        type: boolean
+        example: false
+        xml:
+          name: EduOrgMoscow
+          attribute: false
+          wrapped: false
+        description: Образовательная организация города Москвы?
+      EduOrgCode:
+        type: integer
+        xml:
+          name: EduOrgCode
+          attribute: false
+          wrapped: false
+        description: Наименование образовательной организации (код)
+      EduOrgName:
+        type: string
+        example: string
+        xml:
+          name: EduOrgName
+          attribute: false
+          wrapped: false
+        description: Наименование образовательной организации
+      NotInDir:
+        type: boolean
+        example: false
+        xml:
+          name: NotInDir
+          attribute: false
+          wrapped: false
+        description: Нет в справочнике
+      Class:
+        type: string
+        example: string
+        xml:
+          name: Class
+          attribute: false
+          wrapped: false
+        description: Класс
+        enum:
+          - '1'
+          - '2'
+      EduFormCode:
+        type: integer
+        xml:
+          name: EduFormCode
+          attribute: false
+          wrapped: false
+        description: Форма обучения (код)
+      EduForm:
+        type: string
+        example: string
+        xml:
+          name: EduForm
+          attribute: false
+          wrapped: false
+        description: Форма обучения (текст)
+      EduCode:
+        type: string
+        example: string
+        xml:
+          name: EduCode
+          attribute: false
+          wrapped: false
+        description: Идентификатор  обучающегося
+      Continue:
+        type: boolean
+        example: false
+        xml:
+          name: Continue
+          attribute: false
+          wrapped: false
+        description: Продолжить без подтверждения данных в "Реестре обучающихся"
+    title: EduOrg
+    description: Сведения об образовательной организации
+  Error:
+    type: object
+    required:
+      - Field
+      - Message
+    properties:
+      Field:
+        type: string
+        example: contacts.privatePerson[0]
+        description: Ошибочный параметр
+      Message:
+        type: string
+        example: 'Для контакта типа DECLARANT допустимы только типы документов: 20001,
+          20005, 20007'
+        description: Текст ошибки валидации
+    title: Error
+    description: Ошибка валидации
+  ErrorResponse:
+    type: object
+    required:
+      - Code
+      - Status
+    properties:
+      Status:
+        type: string
+        example: BAD_REQUEST
+        description: HTTP статус сообщения
+      ServiceNumber:
+        type: string
+        example: 0001-9300003-000000-0000000/19
+        description: Единый номер обращения
+      Code:
+        type: string
+        example: V01
+        description: Код ошибки
+      Type:
+        type: string
+        example: VALIDATION_ERROR
+        description: Тип ошибки
+      SubType:
+        type: string
+        example: INPUT_HEADER_VALIDATION_ERROR
+        description: Подтип ошибки
+      Message:
+        type: string
+        example: За дополнительными сведениями обратитесь в службу поддержки с текстом
+          данного сообщения.
+        description: Сообщение об ошибке для пользователя
+      DebugMessage:
+        type: string
+        example: Header iv-user and AccessToken are empty. One of two must be set.
+        description: Служебное сообщение об ошибке
+    title: ErrorResponse
+    description: Сообщение об ошибке
+  ErrorValidationResponse:
+    type: object
+    required:
+      - Code
+      - Status
+    properties:
+      Status:
+        type: string
+        example: BAD_REQUEST
+        description: HTTP статус сообщения
+      ServiceNumber:
+        type: string
+        example: 0001-9300003-000000-0000000/19
+        description: Единый номер обращения
+      Code:
+        type: string
+        example: V01
+        description: Код ошибки
+      Type:
+        type: string
+        example: VALIDATION_ERROR
+        description: Тип ошибки
+      SubType:
+        type: string
+        example: INPUT_HEADER_VALIDATION_ERROR
+        description: Подтип ошибки
+      Message:
+        type: string
+        example: За дополнительными сведениями обратитесь в службу поддержки с текстом
+          данного сообщения.
+        description: Сообщение об ошибке для пользователя
+      DebugMessage:
+        type: string
+        example: Header iv-user and AccessToken are empty. One of two must be set.
+        description: Служебное сообщение об ошибке
+      Errors:
+        type: array
+        description: Список ошибок валидации
+        items:
+          "$ref": "#/definitions/Error"
+    title: ErrorValidationResponse
+    description: Сообщение об ошибке валидации
+  JsonNode:
+    type: object
+    title: JsonNode
+  RequestContact:
+    type: object
+    required:
+      - BirthDate
+      - Citizenship
+      - EMail
+      - FirstName
+      - Gender
+      - LastName
+      - MobilePhone
+      - Type
+    properties:
+      Type:
+        type: string
+        example: DECLARANT
+        description: |-
+          <b>Тип контакта</b>
+          <li><i>DECLARANT</i> - заявитель</li>
+          <li><i>LEGAL_REPRESENTATIVE</i> - представитель заявителя</li>
+          <li><i>CONTACT</i> - контактное лицо</li>
+        enum:
+          - DECLARANT
+          - LEGAL_REPRESENTATIVE
+          - CONTACT
+      LastName:
+        type: string
+        example: Иванов
+        description: Фамилия
+      FirstName:
+        type: string
+        example: Иван
+        description: Имя
+      MiddleName:
+        type: string
+        example: Иванович
+        description: Отчество
+      Gender:
+        type: string
+        example: MALE
+        description: Пол
+        enum:
+          - MALE
+          - FEMALE
+      BirthDate:
+        type: string
+        format: date
+        example: '1988-06-01'
+        description: Дата рождения
+      Snils:
+        type: string
+        example: '00009904392'
+        description: СНИЛС
+      MobilePhone:
+        type: string
+        example: 9500142048
+        description: Контактный телефон
+      EMail:
+        type: string
+        example: ivanov@ivan.ru
+        description: Электронная почта
+      Citizenship:
+        type: string
+        example: Гражданин РФ
+        description: Гражданство
+      SsoId:
+        type: string
+        example: f1a7a95a-f6bf-4e5d-b9b6-49b639319a9d
+        description: Идентификатор СУДИР
+      Documents:
+        type: array
+        description: Документы контакта
+        items:
+          "$ref": "#/definitions/ServiceDocument"
+    title: RequestContact
+    description: Физ.лицо обращения
+  RequestService:
+    type: object
+    properties:
+      RegNum:
+        type: string
+        example: 1900000780
+        description: Регистрационный номер
+      RegDate:
+        type: string
+        format: date-time
+        example: '2019-09-13T10:05:01.972+03:00'
+        description: Регистрационная дата
+    title: RequestService
+    description: Данные по обращению
+  ServiceDocument:
+    type: object
+    required:
+      - Code
+      - DocTitle
+    properties:
+      Code:
+        type: string
+        example: '00001'
+        description: Код документа
+      DocTitle:
+        type: string
+        example: Наименование документа
+        description: Наименование документа
+      DocSerie:
+        type: string
+        example: 4500
+        description: Серия
+      DocNumber:
+        type: string
+        example: 123456
+        description: Номер
+      DocDate:
+        type: string
+        format: date
+        example: '2018-12-08'
+        description: Дата выдачи
+      WhoSign:
+        type: string
+        example: ОВД Якиманка г. Москвы
+        description: Кем выдан
+      Files:
+        type: array
+        description: Файлы
+        items:
+          "$ref": "#/definitions/CoordinateFileReference"
+    title: ServiceDocument
+    description: Документы
+  ServiceNumberResponse:
+    type: object
+    required:
+      - ServiceNumber
+    properties:
+      ServiceNumber:
+        type: string
+        example: 0001-9300003-067101-0000001/19
+        description: Единый номер обращения
+    title: ServiceNumberResponse
+    description: Сведения о ЕНО
+  ServiceProperties:
+    type: object
+    required:
+      - Confirm1
+      - Confirm2
+      - Confirm3
+      - EduOrg
+      - GiaCategoryCode
+      - GiaCategoryTxt
+      - NeedCondition
+      - PersonalInfo
+      - ReasonCode
+      - ReasonTxt
+    properties:
+      ConfirmGia:
+        type: boolean
+        example: false
+        xml:
+          name: ConfirmGia
+          attribute: false
+          wrapped: false
+        description: Подтвердите, что вы действительно являетесь участником ГИА, планирующим
+          принимать участие в итоговом сочинении (изложении) в текущем году
+      ReasonCode:
+        type: integer
+        xml:
+          name: ReasonCode
+          attribute: false
+          wrapped: false
+        description: Причина подачи заявления по завершении установленных сроков подачи
+          заявлений (код)
+      ReasonTxt:
+        type: string
+        example: string
+        xml:
+          name: ReasonTxt
+          attribute: false
+          wrapped: false
+        description: Причина подачи заявления по завершении установленных сроков подачи
+          заявлений (текст)
+      ReasonInform:
+        type: string
+        example: string
+        xml:
+          name: ReasonInform
+          attribute: false
+          wrapped: false
+        description: Информация о причине пропуска установленных сроков подачи заявлений
+      GiaCategoryCode:
+        type: integer
+        xml:
+          name: GiaCategoryCode
+          attribute: false
+          wrapped: false
+        description: |-
+          Категория участника итогового сочинения (изложения)
+           (код)
+      GiaCategoryTxt:
+        type: string
+        example: string
+        xml:
+          name: GiaCategoryTxt
+          attribute: false
+          wrapped: false
+        description: Категория участника итогового сочинения (изложения) (текст)
+      NeedCondition:
+        type: boolean
+        example: false
+        xml:
+          name: NeedCondition
+          attribute: false
+          wrapped: false
+        description: Вам необходимы специальные условия в итоговом сочинении (изложении)
+      EduOrg:
+        xml:
+          name: EduOrg
+          attribute: false
+          wrapped: false
+        description: Сведения об образовательной организации
+        "$ref": "#/definitions/EduOrg"
+      ExamTypeCode:
+        type: integer
+        xml:
+          name: ExamTypeCode
+          attribute: false
+          wrapped: false
+        description: Выбор формы сдачи  (код)
+      ExamTypeName:
+        type: string
+        example: string
+        xml:
+          name: ExamTypeName
+          attribute: false
+          wrapped: false
+        description: Выбор формы сдачи  (текст)
+      PersonalInfo:
+        type: boolean
+        example: false
+        xml:
+          name: PersonalInfo
+          attribute: false
+          wrapped: false
+        description: Сведения о персональных данных (фамилия, имя, отчество, пол,
+          дата рождения) были изменены.
+      Confirm1:
+        type: boolean
+        example: false
+        xml:
+          name: Confirm1
+          attribute: false
+          wrapped: false
+        description: Я ознакомлен(а) с Порядком проведения государственной итоговой
+          аттестации по образовательным программам среднего общего образования
+      Confirm2:
+        type: boolean
+        example: false
+        xml:
+          name: Confirm2
+          attribute: false
+          wrapped: false
+        description: Я ознакомлен(а) с Порядком проведения итогового сочинения (изложения)
+      Confirm3:
+        type: boolean
+        example: false
+        xml:
+          name: Confirm3
+          attribute: false
+          wrapped: false
+        description: Подтверждаю согласие на обработку моих персональных данных
+    title: ServiceProperties
+    description: Дополнительные параметры
+  Status:
+    type: object
+    required:
+      - ServiceNumber
+      - StatusCode
+    properties:
+      StatusCode:
+        type: string
+        example: 8011
+        description: Код статуса
+      StatusTitle:
+        type: string
+        example: Информирование об оплате
+        description: Наименование статуса
+      StatusDate:
+        type: string
+        format: date-time
+        description: |-
+          Дата
+          <i>При отсутствии значения подставляется текущие дата и время<i>
+      Documents:
+        type: array
+        description: Документы заявления
+        items:
+          "$ref": "#/definitions/ServiceDocument"
+      Note:
+        type: string
+        example: Дополнительная информация по статусу
+        description: Примечание
+      ServiceNumber:
+        type: string
+        example: 0001-9300120-067101-00000114/20
+        description: Единый номер обращения
+      ReasonCode:
+        type: string
+        example: 1
+        description: Код причины
+      StatusId:
+        type: string
+        example: 8d9c2a82-0a24-464b-a387-e62c5e077fce
+        description: |-
+          Внешний идентификатор статуса
+          <i>При отсутствии значения UID генерируется сервисом<i>
+    title: Status
+    description: Статус
+  StatusAlreadyResponse:
+    type: object
+    required:
+      - ServiceNumber
+      - Status
+      - StatusCode
+      - StatusId
+    properties:
+      ServiceNumber:
+        type: string
+        example: 0001-9300003-010290-0000001/19
+        description: Единый номер обращения
+      StatusCode:
+        type: integer
+        format: int32
+        example: 1069
+        description: Код статуса
+      ReasonCode:
+        type: string
+        example: 1
+        description: Код причины
+      StatusId:
+        type: string
+        example: 515deff5-57cc-491c-9a3f-fc2967dabdb6
+        description: Внешний идентификатор статуса
+      Status:
+        type: string
+        example: ALREADY_REPORTED
+        description: HTTP статус сообщения
+    title: StatusAlreadyResponse
+    description: Сообщение об успешной подаче статуса
+  StatusIdRequest:
+    type: object
+    required:
+      - StatusId
+    properties:
+      StatusId:
+        type: string
+        example: 3687a053-8af3-434c-9b43-754e821f7505
+        description: Идентификатор статуса
+    title: StatusIdRequest
+    description: Данные для отправки подписанного статуса
+  StatusIdResponse:
+    type: object
+    required:
+      - Status
+      - StatusId
+    properties:
+      StatusId:
+        type: string
+        example: 515deff5-57cc-491c-9a3f-fc2967dabdb6
+        description: Внешний идентификатор статуса
+      Status:
+        type: string
+        example: OK
+        description: HTTP статус сообщения
+    title: StatusIdResponse
+    description: Сообщение об успешно отправленном статусе
+  StatusResponse:
+    type: object
+    required:
+      - ServiceNumber
+      - Status
+      - StatusCode
+      - StatusId
+    properties:
+      ServiceNumber:
+        type: string
+        example: 0001-9300003-010290-0000001/19
+        description: Единый номер обращения
+      StatusCode:
+        type: integer
+        format: int32
+        example: 1069
+        description: Код статуса
+      ReasonCode:
+        type: string
+        example: 1
+        description: Код причины
+      StatusId:
+        type: string
+        example: 515deff5-57cc-491c-9a3f-fc2967dabdb6
+        description: Внешний идентификатор статуса
+      Status:
+        type: string
+        example: OK
+        description: HTTP статус сообщения
+    title: StatusResponse
+    description: Сообщение об успешной подаче статуса

@@ -1,0 +1,25 @@
+type: api
+version: v4.1.0
+data:
+  name: TestAPI
+  context: api/test/api/666
+  version: 1.0
+  provider: admin
+  lifeCycleStatus: CREATED
+  isRevision: false
+  revisionId: 0
+  type: HTTP
+  transport:
+  - http
+  - https
+  policies:
+  - Unlimited
+  visibility: PUBLIC
+  endpointConfig:
+    endpoint_type: http
+    production_endpoints:
+      url: http://efp-gia-record-091701-adapter-efp.apps.okd4.sm-soft.ru/api/gia/record/091701
+    sandbox_endpoints:
+      url: http://efp-gia-record-091701-adapter-efp.apps.okd4.sm-soft.ru/api/gia/record/091701
+  endpointImplementationType: ENDPOINT
+  websubSubscriptionConfiguration: null
